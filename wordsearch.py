@@ -3,7 +3,42 @@ import random
 import re
 import string
 
-letterbag = string.ascii_lowercase
+class Grid:
+  """
+  Repesents a x,y grid of characters.
+  Provides methods to get and print the grid
+  as well as generate it.
+  """
+  def __init__(self, numRows, numCols):
+    self.letterbag = string.ascii_lowercase
+    self.grid = []
+    self.numRows = numRows
+    self.numCols = numCols
+    self.__makeRandomLetterGrid()
+
+  def __makeRandomLetterGrid(self):
+    """Generates the x,y array we call grid"""
+    for x in range(self.numRows):
+      row = []
+      for y in range(self.numCols):
+        row.append(self.__getRandChar())
+      self.grid.append(row)
+    return self.grid
+
+  def __getRandChar(self):
+    """Pict a random one from the letterbag"""
+    return self.letterbag[random.randint(0,25)]
+
+  def get(self):
+    """simple getter"""
+    return self.grid
+
+  def draw(self):
+    """Print the grid to stdout"""
+    for x in range(self.numRows):
+      print self.grid[x]
+
+
 present = 0
 
 numbers = raw_input("How many rows and how many columns do you want the grid to have? (Enter as: rows,columns) ")
@@ -11,18 +46,12 @@ parsed = [int(x.strip()) for x in numbers.split(',')]
 numRows = parsed[0]
 numColumns = parsed[1]
 
+
 #making the grid
-grid = []
-for x in range(numRows):
-  row=[]
-  for y in range(numColumns):
-    row.append(letterbag[random.randint(0,25)])
-  grid.append(row)
-  
-#to visualize the "board"
-print "Here's the board:"
-for i in range(numRows):
-  print grid[i]
+gameGrid = Grid(numRows, numColumns)
+grid = gameGrid.get()
+gameGrid.draw()
+
 
 wordString = raw_input("What words would you like to search for? Please enter them separated by a comma. (i.e. cat,dog,fish)" )
 words = wordString.split(',')
@@ -161,3 +190,4 @@ for r in range(1,numRows-1):
 
 if present == 0:
   print "Sorry kid! None of the words you listed are in the grid."
+
