@@ -53,179 +53,53 @@ class Grid:
     for x in range(self.numRows):
       print self.grid[x]
 
+  def drawType(self, gtype):
+    """Print the grid to stdout"""
+    if gtype == "mirror":
+      mirror = self.mirror()
+      for x in range(self.numRows):
+        print mirror[x]
+    elif gtype == "upsidedown":
+      usd = self.upsidedown()
+      for x in range(self.numRows):
+        print usd[x]
+    elif gtype == "upsidedownmirror":
+      usd = self.upsidedownmirror()
+      for x in range(self.numRows):
+        print usd[x]
+
+  def upsidedownmirror(self):
+    """Return upside down mirror version of grid"""
+    for l in range(self.numRows):
+      upsideDownGrid = []
+      for l in range(self.numCols-1,-1,-1):
+        upsideDownGrid.append(self.grid[l][::-1])
+    return upsideDownGrid
+
   def upsidedown(self):
+    """Return upsidedown grid"""
     for l in range(self.numRows):
       upsideDownGrid = []
       for l in range(self.numCols-1,-1,-1):
         upsideDownGrid.append(self.grid[l])
     return upsideDownGrid
 
-present = 0
-
-numbers = raw_input("How many rows and how many columns do you want the grid to have? (Enter as: rows,columns) ")
-parsed = [int(x.strip()) for x in numbers.split(',')]
-numRows = parsed[0]
-numColumns = parsed[1]
-
-
-#making the grid
-gameGrid = Grid(numRows, numColumns)
-grid = gameGrid.get()
-grid_upsidedown = gameGrid.upsidedown()
-gameGrid.draw()
-
-
-wordString = raw_input("What words would you like to search for? Please enter them separated by a comma. (i.e. cat,dog,fish)" )
-words = wordString.split(',')
-sep=''
-
-
-
-"""
-#checking rows left to right
-for r in range(numRows):
-  rowString = sep.join(grid[r])
-  for w in range(len(words)):
-    if re.search(words[w], rowString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-      
-#checking rows right to left
-for r in range(numRows):
-  reverseRow = []
-  for l in range(numColumns-1,-1,-1):
-   reverseRow.append(grid[r][l])
-  rowString = sep.join(reverseRow)
-  for w in range(len(words)):
-    if re.search(words[w], rowString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-      
-# checking columns top to bottom
-for c in range(numColumns):
-  columnVector = []
-  for r in range(numRows):
-    columnVector.append(grid[r][c])
-  columnString = sep.join(columnVector)
-  for w in range(len(words)):
-    if re.search(words[w], columnString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-
-#checking columns upside-down
-for r in range(numRows):
-  upsideDownGrid = []
-  for l in range(numColumns-1,-1,-1):
-   upsideDownGrid.append(grid[l])
-    
-for c in range(numColumns):
-  columnVector = []
-  for r in range(numRows):
-    columnVector.append(upsideDownGrid[r][c])
-  columnString = sep.join(columnVector)
-  for w in range(len(words)):
-    if re.search(words[w], columnString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-
-
- 
-#### diagonal, right-side-up ####
-#first, diagonals from the top
-for c in range(numColumns-1):
-  r = 0
-  diagVector = []
-  while c <= numColumns-1:
-    diagVector.append(grid[r][c])
-    r=r+1
-    c=c+1
-  diagString = sep.join(diagVector)
-  for w in range(len(words)):
-    if re.search(words[w], diagString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-      
-#diagonals from the lefthand side, and I don't need to repeat the one starting at 0,0
-for r in range(1,numRows-1):
-  c = 0
-  diagVector = []
-  while r <= numRows-1:
-    diagVector.append(grid[r][c])
-    r=r+1
-    c=c+1
-  diagString = sep.join(diagVector)
-  for w in range(len(words)):
-    if re.search(words[w], diagString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-
-#diagonals from the bottom up towards the right
-for c in range(numColumns-1,-1,-1):
-  r = 0
-  diagVector = []
-  while c >= 0:
-    diagVector.append(grid[r][c])
-    r=r+1
-    c=c-1
-  diagString = sep.join(diagVector)
-  for w in range(len(words)):
-    if re.search(words[w], diagString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-
-#diagonals going from the righthand side
-for r in range(1,numRows-1):
-  c = numColumns-1
-  diagVector = []
-  while r <= numRows-1:
-    diagVector.append(grid[r][c])
-    r=r+1
-    c=c-1
-  diagString = sep.join(diagVector)
-  for w in range(len(words)):
-    if re.search(words[w], diagString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-
-#### diagonals, upside down ####
-#going to use the already stored UpsideDownGrid and use the same algorithms as before
-for c in range(numColumns-1,-1,-1):
-  r = 0
-  diagVector = []
-  while c >= 0:
-    diagVector.append(upsideDownGrid[r][c])
-    r=r+1
-    c=c-1
-  diagString = sep.join(diagVector)
-  for w in range(len(words)):
-    if re.search(words[w], diagString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-      
-for r in range(1,numRows-1):
-  c = numColumns-1
-  diagVector = []
-  while r <= numRows-1:
-    diagVector.append(upsideDownGrid[r][c])
-    r=r+1
-    c=c-1
-  diagString = sep.join(diagVector)
-  for w in range(len(words)):
-    if re.search(words[w], diagString):
-      print "The word", words[w], "appears in the grid"
-      present = 1
-
-
-"""
+  def mirror(self):
+    """Return a mirror of the grid"""
+    for l in range(self.numRows):
+      mirrorGrid = []
+      for l in range(self.numCols):
+        row = self.grid[l][::-1]
+        mirrorGrid.append(row)
+    return mirrorGrid
 
 
 
 
 """
----------------------------------------
+given some options, a list of words and a grid,
+find the words in the grid
 """
-
-
 def scan(o, words, grid):
     """o is an object with our options in it"""
     finds = []
@@ -272,56 +146,116 @@ def printscan(o, words, grid):
   return the_scan
 
 
-# good trick for python lambda object
-#  down_scan_opts = type('lamdbaobject', (object,), {})()
 
+
+
+all_finds = []
+present = 0
+
+numbers = raw_input("How many rows and how many columns do you want the grid to have? (Enter as: rows,columns) ")
+parsed = [int(x.strip()) for x in numbers.split(',')]
+numRows = parsed[0]
+numColumns = parsed[1]
+
+
+#making the grid
+gameGrid = Grid(numRows, numColumns)
+grid = gameGrid.get()
+grid_upsidedown = gameGrid.upsidedown()
+grid_mirror = gameGrid.mirror()
+grid_upsidedownmirror = gameGrid.upsidedownmirror()
+gameGrid.draw()
+
+
+
+wordString = raw_input("What words would you like to search for? Please enter them separated by a comma. (i.e. cat,dog,fish)" )
+words = wordString.split(',')
+sep=''
+
+
+
+
+#
+# Setup scan options and scan for our words
+#
+
+# Orthogonal
 L2R = ScanOpts(range(numRows), False)
 L2R.tag = "Left to Right"
 finds = printscan(L2R, words, grid)
+all_finds.append(finds)
 
 R2L = ScanOpts(range(numRows), range(numColumns-1,-1,-1))
 R2L.tag = "Right to Left"
 finds = printscan(R2L, words, grid)
+all_finds.append(finds)
 
+
+# Orthogonal
 T2B = ScanOpts(range(numRows), range(numColumns))
-T2B.tag = "Top to Bottom"
 T2B.flip_xy = True
+T2B.tag = "Top to Bottom"
 finds = printscan(T2B, words, grid)
 
+all_finds.append(finds)
 B2T = ScanOpts(range(numRows), range(numColumns-1,-1,-1))
-B2T.tag = "Bottom to Top"
 B2T.flip_xy = True
+B2T.tag = "Bottom to Top"
 finds = printscan(B2T, words, grid)
+all_finds.append(finds)
 
-DL2R = ScanOpts(range(numColumns), None)
-DL2R.tag = "Middle Diagonal moving left to right"
-DL2R.while_block = True
-finds = printscan(DL2R, words, grid)
 
+
+# TODO: With the grid variants we should be able to simplify these
+# and probably the scan routine too - just hand in the right 
+# grid variants to achieve all the scans we need.
+
+# Top Down, Left to Right Diagonal
+
+# starts at the "bottom" of the grid and attempts to find
+# top-down left-right matches, scanning from the bottom
+# to the top of the grid
 UL2R = ScanOpts(range(numColumns-1,-1,-1), None)
-UL2R.tag = "Diagonally from the bottom left, going up to the right"
 UL2R.while_block = True
 UL2R.flip_xy = True
+UL2R.tag = "Diagonal: TopDown LeftRight x=0 "
 finds = printscan(UL2R, words, grid)
+all_finds.append(finds)
+# Top Down Left to Right Diagonal
+# Starting at 0,0 and scanning diagonally down l2r.
+DL2R = ScanOpts(range(numColumns), None)
+DL2R.while_block = True
+DL2R.flip_xy = False
+DL2R.tag = "Diagonal: TopDown LeftRight y=0 "
+finds = printscan(DL2R, words, grid)
+all_finds.append(finds)
 
-DR2L = ScanOpts(range(numColumns-1,-1,-1), range(numRows))
-DR2L.tag = "Bottom right reading down to the left as we move up the right edge"
-DR2L.while_block = True
-DR2L.desc = True
-DR2L.flip_xy = True
-finds = printscan(DR2L, words, grid)
+# do the 2 above scans with the upside down grid
+UL2R.tag = "Diagonal: BottomUp LeftRight y=maxy "
+finds = printscan(UL2R, words, grid_upsidedown)
+all_finds.append(finds)
+DL2R.tag = "Diagonal: BottomUp LeftRight y=maxy "
+finds = printscan(DL2R, words, grid_upsidedown)
+all_finds.append(finds)
 
-RR2L = ScanOpts(range(numColumns-1,-1,-1), range(numRows))
-DR2L.tag = "Down and right to left and we move across the top row"
-RR2L.while_block = True
-RR2L.desc = True
-RR2L.flip_xy = True
-finds = printscan(RR2L, words, grid_upsidedown)
+# do the 2 above scans with the mirror grid
+UL2R.tag = "Diagonal: TopDown RightLeft x=maxx "
+finds = printscan(UL2R, words, grid_mirror)
+all_finds.append(finds)
+DL2R.tag = "Diagonal: TopDown  RightLeft y=0"
+finds = printscan(DL2R, words, grid_mirror)
+all_finds.append(finds)
+
+# do the 2 above scans with the mirror grid
+UL2R.tag = "Diagonal: BottomUp RightLeft x=maxx "
+finds = printscan(UL2R, words, grid_upsidedownmirror)
+all_finds.append(finds)
+DL2R.tag = "Diagonal: BottomUp RightLeft y=maxy "
+finds = printscan(DL2R, words, grid_upsidedownmirror)
+all_finds.append(finds)
 
 
-
-
-present = len(finds)
+present = len(all_finds)
 
 if present == 0:
   print "Sorry kid! None of the words you listed are in the grid."
